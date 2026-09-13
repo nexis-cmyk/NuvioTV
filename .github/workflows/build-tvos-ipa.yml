@@ -33,7 +33,7 @@ jobs:
       - name: Check out the customized tvOS source
         run: |
           rm -rf NuvioMobile
-          git clone --branch tvos-shared-extraction --depth 1 \
+          git clone --branch codex/catalog-fix --depth 1 \
             "https://github.com/${{ github.repository_owner }}/NuvioMobile.git" NuvioMobile
           cd NuvioMobile
           git submodule update --init MPVKit
@@ -57,6 +57,8 @@ jobs:
           PRODUCTS="iosApp/build/tvos-ipa/Build/Products/Release-appletvos"
           mkdir -p "$RUNNER_TEMP/Payload"
           cp -R "$PRODUCTS/NuvioTV.app" "$RUNNER_TEMP/Payload/"
+          # Free-Apple-ID re-signers cannot preserve the tvOS extension signature.
+          rm -rf "$RUNNER_TEMP/Payload/NuvioTV.app/PlugIns"
           cd "$RUNNER_TEMP"
           zip -qry NuvioTV.ipa Payload
 
